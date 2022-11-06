@@ -59,8 +59,16 @@ class Loss:
           falseNeg = falseNeg + confusionMat[j][i]
         
       #precision and recall calculations
-      precision = truePos/(truePos+falsePos)
-      recall = truePos/(truePos+falseNeg)
+      if (truePos+falsePos) != 0:
+        precision = truePos/(truePos+falsePos)
+      else:
+        precision = 0
+
+      if (truePos+falseNeg) != 0
+        recall = truePos/(truePos+falseNeg)
+      else:
+        recall = 0
+
 
       #assigns the precision and recall to the respective self arrays
       self.prec.append(precision)
