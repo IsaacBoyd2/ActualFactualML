@@ -195,8 +195,9 @@ class Model:
           actualOneHot = actual[0]
 
           for j in range(len(self.values[i])):
-            diff = actualOneHot.get(actualClass)[j] - self.values[i][j]
-            deltas[0].append(diff)
+            if j < len(actualOneHot):
+              diff = actualOneHot.get(actualClass)[j] - self.values[i][j]
+              deltas[0].append(diff)
 
       else:
 
@@ -222,7 +223,6 @@ class Model:
 
             #print(self.mlp_init[i+1])
             if l < len(deltas[counter]):
-              print("\n\nLen of Deltas(coutner/l): ", len(deltas), len(deltas[counter]), "counter/l: ", counter, l)
               deltai = deltas[counter][l]
               for m in range(len(farthest_layer_right)): 
                 weight_s = self.mlp_init[i][m][l]
