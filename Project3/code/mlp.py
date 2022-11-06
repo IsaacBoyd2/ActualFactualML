@@ -214,6 +214,8 @@ class Model:
 
           #weight_sum = 0
           sumwih_deltai = 0
+          deltai = 0
+          weight_s = 0
 
           for l in range(len(self.mlp_init[i+1][0])):
             #print(len(self.mlp_init[i+1][0]))
