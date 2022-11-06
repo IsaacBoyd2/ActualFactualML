@@ -252,7 +252,7 @@ class Model:
           print(j)
           print(k)
           print(len(self.mlp_init[i][j]), len(deltas), len(self.values[i]))
-          if k < len(self.mlp_init[i][j]):
+          if k < len(self.mlp_init[i][j]) and j < len(self.values[i]):
             self.mlp_init[i][j][k] = self.mlp_init[i][j][k] + eta*deltas[i][k]*self.values[i][j]
 
 
