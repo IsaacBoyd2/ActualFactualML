@@ -201,7 +201,6 @@ class Model:
 
       else:
 
-        print(len(farthest_layer_right))
         for j in range(len(farthest_layer_right[0])): 
           #print(j) 
           #print(i)
@@ -250,10 +249,6 @@ class Model:
       for j in range(len(layer)):
         neuron = layer[j]
         for k in range(len(neuron)):
-          print(i)
-          print(j)
-          print(k)
-          print(len(self.mlp_init[i][j]), len(deltas), len(self.values[i]))
           if k < len(self.mlp_init[i][j]) and j < len(self.values[i]) and k < len(deltas[i]):
             self.mlp_init[i][j][k] = self.mlp_init[i][j][k] + eta*deltas[i][k]*self.values[i][j]
 
