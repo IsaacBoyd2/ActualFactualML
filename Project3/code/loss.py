@@ -64,7 +64,7 @@ class Loss:
       else:
         precision = 0
 
-      if (truePos+falseNeg) != 0
+      if (truePos+falseNeg) != 0:
         recall = truePos/(truePos+falseNeg)
       else:
         recall = 0
