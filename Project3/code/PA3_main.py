@@ -1,4 +1,3 @@
-
 #------------------------Header-------------------------
 
 #Code by: Isaac Boyd, James Lucas 
@@ -38,7 +37,7 @@ def main():
   #-----Hyper_parameters-------#
 
   hiddenArray = [4,3]
-  eta = .5
+  eta = .001
 
   #----------------------------#
 
@@ -53,7 +52,7 @@ def main():
   if preProcess.value == 0:
     preProcess.oneHot()
     modeling = MLP.Model()
-    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes))
+    modeling.run(len(preProcess.df.iloc[0]),hiddenArray,len(preProcess.classes))
     
     
     for i in range(len(preProcess.folds[0:8])): 
@@ -71,27 +70,18 @@ def main():
       print(preProcess.classes)
       values[i] = preProcess.classes[values[i]]
 
-    print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
+    loss = lss.Loss()
+    loss.calculate(preProcess.classes, values, actual)
+    print("F1: ", loss.F1)
 
   #regression
   else:
     modeling = MLP.Model()
-    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,1)
+    modeling.run(len(preProcess.df.iloc[0]),hiddenArray,1)
 
     for q in range(30):
       for i in range(len(preProcess.folds[0:8])):
-
-
-        print('ehllo',preProcess.df.values[i,0:-1])
-        print(len(preProcess.df.values[i,0:-1].astype('float')))
-        print(preProcess.value)
-
         modeling.forwardProp(preProcess.df.values[i,0:-1].astype('float'),preProcess.value)
-
-
-        print(preProcess.df.values[i,-1])
-        #print(len(preProcess.df.values[i,-1]))
-
         modeling.Back_Prop(eta,1,preProcess.df.values[i,-1],1)
 
     values = []
@@ -101,7 +91,9 @@ def main():
       values.append(modeling.output)
       actual.append(preProcess.folds[9][i][-1])
 
-    print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
+    loss = lss.Loss()
+    loss.calculateReg(values, actual)
+    print("MSE: ", loss.mse, "\nMAE: ", loss.mae)
 
   
  
