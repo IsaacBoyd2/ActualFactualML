@@ -74,17 +74,8 @@ class Loss:
       self.prec.append(precision)
       self.rec.append(recall)
 
-    #gets the average precision and recall, then calculates the F1 score
-    avgPrec = 0
-    avgRec = 0
-    for i in range(len(self.prec)):
-      avgPrec = avgPrec + self.prec[i]
-      avgRec = avgRec + self.rec[i]
-    avgPrec = avgPrec/len(self.prec)
-    avgRec = avgRec/len(self.rec)
-
     #assigns the F1 score to the object
-    self.F1 = 2*((avgPrec*avgRec)/(avgPrec+avgRec))
+    self.F1 = 2*((self.prec[0]*self.rec[0])/(self.prec[0]+self.rec[0]))
 
   #used to calculate mse and mae for regression data sets
   def calculateReg(self, pred, facts):
