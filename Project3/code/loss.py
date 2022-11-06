@@ -34,6 +34,7 @@ class Loss:
     for i in range(len(facts)):
       indHorz = 0
       indVert = 0
+      print('Classes', classes, "predictions", pred, "actual", facts)
       #checks for position in the confusion matrix
       for k in range(len(classes)):
         if classes[k] == pred[i]:
