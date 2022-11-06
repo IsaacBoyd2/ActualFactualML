@@ -44,6 +44,8 @@ class Loss:
       #adds an occurance in the confusion matrix
       confusionMat[indHorz, indVert] += 1
 
+      print("ConfusionMatrix: \n", confusionMat)
+
     #calculates precision and recall
     for i in range(len(confusionMat)):
       truePos = 0
