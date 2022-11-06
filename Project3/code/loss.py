@@ -32,17 +32,16 @@ class Loss:
 
     #populates the confusion matrix that will be used for precision, recall, and F1 calculations.
     for i in range(len(facts)):
-      for j in range(len(facts[i])):
-        indHorz = 0
-        indVert = 0
-        #checks for position in the confusion matrix
-        for k in range(len(classes)):
-          if classes[k] == pred[i][j]:
-            indVert = k
-          if classes[k] == facts[i][j]:
-            indHorz = k
-        #adds an occurance in the confusion matrix
-        confusionMat[indHorz, indVert] += 1
+      indHorz = 0
+      indVert = 0
+      #checks for position in the confusion matrix
+      for k in range(len(classes)):
+        if classes[k] == pred[i]:
+          indVert = k
+        if classes[k] == facts[i]:
+          indHorz = k
+      #adds an occurance in the confusion matrix
+      confusionMat[indHorz, indVert] += 1
 
     #calculates precision and recall
     for i in range(len(confusionMat)):
@@ -86,12 +85,11 @@ class Loss:
     total = 0
     #goes through all of our predictions and compares them to the actual result
     for i in range(len(pred)):
-      for j in range(len(pred[i])):
-        distance = distance + ((float(facts[i][j]) - float(pred[i][j]))**float(2))
-        distanceabs = distanceabs + abs((float(facts[i][j]) - float(pred[i][j])))
-        #saves all of the errors for each point
-        self.error.append((float(facts[i][j]) - float(pred[i][j]))**float(2))
-        total = total+1
+      distance = distance + ((float(facts[i]) - float(pred[i]))**float(2))
+      distanceabs = distanceabs + abs((float(facts[i]) - float(pred[i])))
+      #saves all of the errors for each point
+      self.error.append((float(facts[i]) - float(pred[i]))**float(2))
+      total = total+1
 
     #makes sure that our predictions and actual results are not empty
     if len(facts) > 0:
