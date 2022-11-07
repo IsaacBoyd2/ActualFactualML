@@ -16,7 +16,6 @@ import os
 import random
 import math
 
-
 #----Python Classes import----
 
 classInputArray = [['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/preprocessing.py?raw=true','preprocessing.py'],
@@ -40,14 +39,17 @@ def main():
 
   #-----Hyper_parameters-------#
 
-  hiddenArray = [8]
-  eta = 0.20
+  hiddenArray = [20]
+  
+  eta = 0.0015
 
   superscore = 0
 
-
-
   #----------------------------#
+
+  flag = 0
+  if len(hiddenArray) == 0:
+    flag = 1
 
   #runs preProcessing
   preProcess = pp.Preprocessing()
@@ -72,14 +74,14 @@ def main():
     random_list = random.sample(range(len(preProcess.df)), len(preProcess.df)) 
     testing_size = len(preProcess.df) - training_size
 
-    for run_num in range(type_of_cross_v):
+    for run_num in range(1):   #Just for 1
       
 
       #First run our model to initilize the weights
       preProcess.oneHot()
       modeling = MLP.Model()
       
-      modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes))
+      modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes),flag)
 
       testing_list = []
       training_list = []
@@ -104,68 +106,41 @@ def main():
       
       
       
-      for q in range(1000):
-        #print('hello')
+      for q in range(60):
         
-        for i in range(len(training_df)):   #len(training_df.iloc[0])
-        
-
-
-        #for i in range(len(preProcess.folds[0:8])): 
+        for i in range(len(training_df)):   
           modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
           modeling.Back_Prop(eta,0,[preProcess.oneHotDict,training_df.values[i,-1]],len(preProcess.classes))
           
         values = []
         actual = []
 
-      #print(len(testing_df))
-
-      #for i in range(len(testing_df)):
-
-        
-        #print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
-
-      #print(training_df)
-
       uniques = training_df['Class'].unique()
       
       for i in range(len(testing_df)):
         modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
-        #print(f'\n\nFinal Output {i}: ',uniques[modeling.values[-1].index(max(modeling.values[-1]))])
-
+        actual.append(testing_df_with_labels.values[i,-1])
+        values.append(uniques[modeling.values[-1].index(max(modeling.values[-1]))])
 
         if testing_df_with_labels.values[i,-1] == uniques[modeling.values[-1].index(max(modeling.values[-1]))]:
           superscore += 1
-
-
-      
-
-
-        #values.append(modeling.values[-1].index(max(modeling.values[-1])))
-        #actual.append(preProcess.folds[9][i][-1])
-
-    #for i in range(len(values)):
-    #  print(preProcess.classes)
-    #  values[i] = preProcess.classes[values[i]]
-    #
-    #print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
-
-
-
-
 
     print(superscore)
     print(preProcess.df)
 
 
     print(superscore/len(preProcess.df))
+
+    lossValues = lss.Loss()
+    lossValues.calculate(uniques, values, actual)
+
   #regression
   else:
 
 
     #First run our model to initilize the weights
     modeling = MLP.Model()
-    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,1)
+    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,1,flag)
 
 
     #Define what type of cross fold validation we will be doing
@@ -202,115 +177,30 @@ def main():
     testing_df = testing_df_with_labels.iloc[: , :-1]
 
     
-    for q in range(100):
+    for q in range(30):
       
-      for i in range(len(training_df)):   #len(training_df.iloc[0])
-
-        
-
-        #print('asdlkjfhasdf',len(preProcess.folds[0:8]))
-
-
-        #print('ehllo',preProcess.df.values[i,0:-1])
-        #print(len(preProcess.df.values[i,0:-1].astype('float')))
-        #print(preProcess.value)
+      for i in range(len(training_df)):   
 
         modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
-        #print('modeling.output',modeling.output)
-
-        #print('Weights before bp : ',modeling.mlp_init)                  #important
-
-        #print(modeling.output)
-        #print(preProcess.df.values[i,-1])
-        #print(len(preProcess.df.values[i,-1]))
-
-        
-        #print('Training things',training_df.values[i,0:-1])
-        #print('The preprocessing actual that we are sending in.',preProcess.df.values[i,-1])
-
 
         modeling.Back_Prop(eta,1,training_df.values[i,-1],1)
-        #print('Values inside the nodes xis : ',modeling.values)                      #These four important
-        #print('Weights connecting the nodes after bp : ',modeling.mlp_init)
-        #print('Output of forwards prop : ',modeling.output)
-
-
-        #print('\n Cycle -------------------------------- \n')
 
     values = []
     actual = []
     for i in range(len(testing_df)):
-      print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
+      actual.append(testing_df_with_labels.values[i,-1])
 
 
-    for i in range(len(testing_df)):   #len(training_df.iloc[0])
-
-      #print('asdlkjfhasdf',len(preProcess.folds[0:8]))
-
-
-      #print('ehllo',preProcess.df.values[i,0:-1])
-      #print(len(preProcess.df.values[i,0:-1].astype('float')))
-      #print(preProcess.value)
-
+    for i in range(len(testing_df)):
       modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
-      print(f'\n\nFinal Output {i}: ',modeling.output)
+      print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
+      print(f'Final Output {i}: ',modeling.output)
+      print('\n\n')
+      values.append(modeling.output)
 
-    #print(training_df)
-
-    '''for i in range(len(training_df)):
-      #print(modeling.mlp_init)
-      modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
-      print(modeling.output)'''
-      #print(training_df.iloc[i])
-
-    #for j in range(len(testing_df)):
-      #print(modeling.mlp_init)
-      #print(modeling.values)
-      #modeling.forwardProp(testing_df.values[j,0:-1].astype('float'),preProcess.value)
-      #print(testing_df.iloc[j])
-      
-
-
-
-
-      #print(modeling.output)
-
-
-
-
-    #print(modeling.mlp_init)
-    #for i in range(len(preProcess.df)-lengthtogo-3):
-
-      #print(len(preProcess.df)-lengthtogo)
-
-      
-      
-      #print(preProcess.df.values[i+len(preProcess.folds[0:8]),0:-1].astype('float'))
-
-
-      #modeling.forwardProp(preProcess.df.values[i+lengthtogo,0:-1].astype('float'),preProcess.value)
-
-      #print('hhhh',preProcess.df.values[i+lengthtogo,0:-1].astype('float'))
-      #print('iiii',preProcess.df.values[i+lengthtogo])
-      #print('outputjjj',modeling.output)
-
-      
-      #print(modeling.values)
-      #print(modeling.output)
-
-
-
-      #values.append(modeling.output)
-      #print(i)
-      #print(len(preProcess.folds[9]))
-      #actual.append(preProcess.folds[9][i][-1])
-
-    #print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
-
-  
- 
-
-
+    lossValues = lss.Loss()
+    lossValues.calculateReg(values, actual)
+    
 
 #calls main
 main()
