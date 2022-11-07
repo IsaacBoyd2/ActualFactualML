@@ -40,8 +40,12 @@ def main():
 
   #-----Hyper_parameters-------#
 
-  hiddenArray = [1000]
-  eta = 0.0015
+  hiddenArray = [8]
+  eta = 0.20
+
+  superscore = 0
+
+
 
   #----------------------------#
 
@@ -54,47 +58,131 @@ def main():
 
   #classification
   if preProcess.value == 0:
-    preProcess.oneHot()
-    modeling = MLP.Model()
-    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes))
-    
-    
-    for i in range(len(preProcess.folds[0:8])): 
-      modeling.forwardProp(preProcess.df.values[i,0:-1].astype('float'),preProcess.value)
-      modeling.Back_Prop(eta,0,[preProcess.oneHotDict,preProcess.df.values[i,-1]],len(preProcess.classes))
+
+
+    #Define what type of cross fold validation we will be doing
+    type_of_cross_v = 10
+
+
+    #Get the size of the training
+    training_size = math.ceil(len(preProcess.df)*(type_of_cross_v-1)/(type_of_cross_v))                          #Split the data on x-cross val
+    percentages = []
+
+    #Get the size of the testing
+    random_list = random.sample(range(len(preProcess.df)), len(preProcess.df)) 
+    testing_size = len(preProcess.df) - training_size
+
+    for run_num in range(type_of_cross_v):
       
-    values = []
-    actual = []
-    for i in range(len(preProcess.folds[9])):
-      modeling.forwardProp(preProcess.df.values[i+len(preProcess.folds[0:8]),0:-1].astype('float'),preProcess.value)
-      values.append(modeling.values[-1].index(max(modeling.values[-1])))
-      actual.append(preProcess.folds[9][i][-1])
 
-    for i in range(len(values)):
-      print(preProcess.classes)
-      values[i] = preProcess.classes[values[i]]
+      #First run our model to initilize the weights
+      preProcess.oneHot()
+      modeling = MLP.Model()
+      
+      modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes))
 
-    print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
+      testing_list = []
+      training_list = []
 
+      testing_list = random_list[run_num*testing_size:testing_size*(run_num+1)]
+
+      random_list2 = []
+
+      for k in random_list:
+        random_list2.append(k)
+
+      for j in testing_list:
+        random_list2.remove(j)
+
+      for l in random_list2:
+        training_list.append(l)
+
+      #here are dataframes that we can acually use 
+      training_df =  preProcess.df.iloc[training_list]
+      testing_df_with_labels = preProcess.df.iloc[testing_list]
+      testing_df = testing_df_with_labels.iloc[: , :-1]
+      
+      
+      
+      for q in range(1000):
+        #print('hello')
+        
+        for i in range(len(training_df)):   #len(training_df.iloc[0])
+        
+
+
+        #for i in range(len(preProcess.folds[0:8])): 
+          modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
+          modeling.Back_Prop(eta,0,[preProcess.oneHotDict,training_df.values[i,-1]],len(preProcess.classes))
+          
+        values = []
+        actual = []
+
+      #print(len(testing_df))
+
+      #for i in range(len(testing_df)):
+
+        
+        #print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
+
+      #print(training_df)
+
+      uniques = training_df['Class'].unique()
+      
+      for i in range(len(testing_df)):
+        modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
+        #print(f'\n\nFinal Output {i}: ',uniques[modeling.values[-1].index(max(modeling.values[-1]))])
+
+
+        if testing_df_with_labels.values[i,-1] == uniques[modeling.values[-1].index(max(modeling.values[-1]))]:
+          superscore += 1
+
+
+      
+
+
+        #values.append(modeling.values[-1].index(max(modeling.values[-1])))
+        #actual.append(preProcess.folds[9][i][-1])
+
+    #for i in range(len(values)):
+    #  print(preProcess.classes)
+    #  values[i] = preProcess.classes[values[i]]
+    #
+    #print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
+
+
+
+
+
+    print(superscore)
+    print(preProcess.df)
+
+
+    print(superscore/len(preProcess.df))
   #regression
   else:
+
+
+    #First run our model to initilize the weights
     modeling = MLP.Model()
     modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,1)
 
 
+    #Define what type of cross fold validation we will be doing
     type_of_cross_v = 10
 
+    #Get the size of the training
     training_size = math.ceil(len(preProcess.df)*(type_of_cross_v-1)/(type_of_cross_v))                          #Split the data on x-cross val
-
     percentages = []
 
+    #Get the size of the testing
     random_list = random.sample(range(len(preProcess.df)), len(preProcess.df)) 
-
     testing_size = len(preProcess.df) - training_size
 
 
     testing_list = []
     training_list = []
+    #This is hardcoded but will need to be changed to fit crossv
     testing_list = random_list[0*testing_size:testing_size*(0+1)]
 
     random_list2 = []
@@ -108,27 +196,13 @@ def main():
     for l in random_list2:
       training_list.append(l)
 
+    #here are dataframes that we can acually use 
     training_df =  preProcess.df.iloc[training_list]
     testing_df_with_labels = preProcess.df.iloc[testing_list]
     testing_df = testing_df_with_labels.iloc[: , :-1]
 
-
-    #print(training_df[0:10])
-    #print(testing_df[0:10])
-
-
-    #print('df', preProcess.df[0:20])
-    #print('df', preProcess.df[-20:])
-
-    #lengthtogo = len(preProcess.df)*0.9
-
-    #lengthtogo = round(lengthtogo)
-
-
-    #print(modeling.mlp_init)
-
     
-    for q in range(5):
+    for q in range(100):
       
       for i in range(len(training_df)):   #len(training_df.iloc[0])
 
