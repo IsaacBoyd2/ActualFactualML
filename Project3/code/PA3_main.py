@@ -39,9 +39,9 @@ def main():
 
   #-----Hyper_parameters-------#
 
-  hiddenArray = [20]
+  hiddenArray = [40]
   
-  eta = 0.0015
+  eta = 0.005
 
   superscore = 0
 
@@ -106,7 +106,7 @@ def main():
       
       
       
-      for q in range(60):
+      for q in range(10):
         
         for i in range(len(training_df)):   
           modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
@@ -125,14 +125,9 @@ def main():
         if testing_df_with_labels.values[i,-1] == uniques[modeling.values[-1].index(max(modeling.values[-1]))]:
           superscore += 1
 
-    print(superscore)
-    print(preProcess.df)
-
-
-    print(superscore/len(preProcess.df))
-
     lossValues = lss.Loss()
     lossValues.calculate(uniques, values, actual)
+    print("F1-score: ", lossValues.F1)
 
   #regression
   else:
@@ -193,13 +188,11 @@ def main():
 
     for i in range(len(testing_df)):
       modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
-      print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
-      print(f'Final Output {i}: ',modeling.output)
-      print('\n\n')
       values.append(modeling.output)
 
     lossValues = lss.Loss()
     lossValues.calculateReg(values, actual)
+    print("MSE: ", lossValues.mse, "\nMAE", lossValues.mae)
     
 
 #calls main
