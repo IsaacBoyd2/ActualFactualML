@@ -28,43 +28,72 @@ class Model:
     self.mlp_init = []
     self.values = []
     
-  def run(self, input_size, hidden_sizes, output_size):  
+  def run(self, input_size, hidden_sizes, output_size,flag):  
     #Initilize the network to have random weights between 0 and 1.
 
     mlp_init = []   #The network
 
-    #Input
-    hidden_nodes = []
-    for i in range(input_size):
-      hidden_node = []
-      for i in range(hidden_sizes[0]):
-        hidden_node.append(random.random())
-      hidden_nodes.append(hidden_node)
+    if flag == 0:
 
-    mlp_init.append(hidden_nodes)
-    
-
-    #Init number of weights between each hidden layer
-    for sizes in range(len(hidden_sizes)-1):
+      #Input
       hidden_nodes = []
-      for i in range(hidden_sizes[0+sizes]):
+      for i in range(input_size):
         hidden_node = []
-        for j in range(hidden_sizes[1+sizes]):
+        for i in range(hidden_sizes[0]):
           hidden_node.append(random.random())
         hidden_nodes.append(hidden_node)
 
       mlp_init.append(hidden_nodes)
+      
 
-    #output layer
-    output_nodes = []
-    for i in range(hidden_sizes[-1]):
-      output_node = []
-      for i in range(output_size):
-        output_node.append(random.random())
-      output_nodes.append(output_node)
-    
-    
-    mlp_init.append(output_nodes)
+      
+
+      #Init number of weights between each hidden layer
+      for sizes in range(len(hidden_sizes)-1):
+        hidden_nodes = []
+        for i in range(hidden_sizes[0+sizes]):
+          hidden_node = []
+          for j in range(hidden_sizes[1+sizes]):
+            hidden_node.append(random.random())
+          hidden_nodes.append(hidden_node)
+
+        mlp_init.append(hidden_nodes)
+
+      #output layer
+      output_nodes = []
+      for i in range(hidden_sizes[-1]):
+        output_node = []
+        for i in range(output_size):
+          output_node.append(random.random())
+        output_nodes.append(output_node)
+      
+      
+      mlp_init.append(output_nodes)
+
+    else:
+
+      #Input
+      hidden_nodes = []
+      for i in range(input_size):
+        hidden_node = []
+        for i in range(ouput_size):
+          hidden_node.append(random.random())
+        hidden_nodes.append(hidden_node)
+
+      mlp_init.append(hidden_nodes)
+      
+
+      #output layer
+      output_nodes = []
+      for i in range(inputsize):
+        output_node = []
+        for i in range(output_size):
+          output_node.append(random.random())
+        output_nodes.append(output_node)
+      
+      
+      mlp_init.append(output_nodes)
+
 
     #print(mlp_init)
 
