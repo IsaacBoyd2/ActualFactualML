@@ -1,270 +1,321 @@
+from posixpath import join
+
 #------------------------Header-------------------------
 
 #Code by: Isaac Boyd, James Lucas 
 
 ##Code For: Neural Net
-##Completed: 10-9-2022
+##Completed: 11-1-2022
 ##References: NA
 
 #-----------------------imports-------------------------
 
 import pandas as pd
-import numpy as np
-from scipy import stats as st
 import requests
 import os
+import random
 import math
-import random as random
-import sys
 
-#----------------------classes-------------------------
 
-class Model:
+#----Python Classes import----
 
-  def __init__(self):
-    self.df = pd.DataFrame
-    self.predictions = []
-    self.labels = []
-    self.mlp_init = []
-    self.values = []
-    
-  def run(self, input_size, hidden_sizes, output_size):  
-    #Initilize the network to have random weights between 0 and 1.
+classInputArray = [['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/preprocessing.py?raw=true','preprocessing.py'],
+                   ['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/loss.py?raw=true', 'loss.py'],
+                   ['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/mlp.py?raw=true', 'mlp.py']]
 
-    mlp_init = []   #The network
+#writes our code from github to our current local file
+for i in range(len(classInputArray)):
+  with open(classInputArray[i][1], 'w') as f:
+    r = requests.get(classInputArray[i][0])
+    f.write(r.text)
 
-    #Input
-    hidden_nodes = []
-    for i in range(input_size):
-      hidden_node = []
-      for i in range(hidden_sizes[0]):
-        hidden_node.append(random.random())
-      hidden_nodes.append(hidden_node)
+#imports our classes
+import preprocessing as pp
+import loss as lss
+import mlp as MLP
 
-    mlp_init.append(hidden_nodes)
-    
+#------------------------Main--------------------------
 
-    #Init number of weights between each hidden layer
-    for sizes in range(len(hidden_sizes)-1):
-      hidden_nodes = []
-      for i in range(hidden_sizes[0+sizes]):
-        hidden_node = []
-        for j in range(hidden_sizes[1+sizes]):
-          hidden_node.append(random.random())
-        hidden_nodes.append(hidden_node)
+def main():
 
-      mlp_init.append(hidden_nodes)
+  #-----Hyper_parameters-------#
 
-    #output layer
-    output_nodes = []
-    for i in range(hidden_sizes[-1]):
-      output_node = []
-      for i in range(output_size):
-        output_node.append(random.random())
-      output_nodes.append(output_node)
-    
-    
-    mlp_init.append(output_nodes)
+  hiddenArray = [8]
+  eta = 0.20
 
-    #print(mlp_init)
+  superscore = 0
 
-    
 
-    self.mlp_init = mlp_init
 
-    #print(self.mlp_init)
+  #----------------------------#
 
-    '''
+  #runs preProcessing
+  preProcess = pp.Preprocessing()
+  preProcess.process()
+  preProcess.normalize()
+  preProcess.fold()
+  data = preProcess.folds
 
-    mlp_init is set up in the following fashion.
+  #classification
+  if preProcess.value == 0:
 
-    input layer ->    input_nodes[weight_going_out,weight_going_out,weight_going_out ... weight_going_out]
-    hiden layer 1 ->  hidden_nodes[weight_going_out,weight_going_out,weight_going_out ... weight_going_out]
-    ...
-    hideen layer x -> hidden_nodes[weight_going_out,weight_going_out,weight_going_out ... weight_going_out]
-    output layer ->   ouput_nodes[weight_going_out,weight_going_out,weight_going_out ... weight_going_out]
 
-    '''
-    
-  def forwardProp(self,input, classNumber):      #potentially need to do something for just the input layers
-    values = [[]]
-    values[0] = input
-    #loops through each layer.
-    for i in range(len(self.mlp_init)):
-      layer_outputs = []
-      #loops through each node      
-      if i != len(self.mlp_init)-1: #As long as we are not in the last layer
-        for j in range(len(self.mlp_init[i+1])):  #This grabs the length of the next layer
-          l = []
-          for k in range(len(values[i])):   #for every xi
-            l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
-          summation = sum(l) #Sum of all xiwis
-          #print("SUMMATION: ", summation)
-          sigmoid = 1/(1+round(math.e**(-summation),8))    #sigmoid function
-          layer_outputs.append(sigmoid) #append for each input
+    #Define what type of cross fold validation we will be doing
+    type_of_cross_v = 10
 
-        values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
-        #print(values)
 
-      #output layer
+    #Get the size of the training
+    training_size = math.ceil(len(preProcess.df)*(type_of_cross_v-1)/(type_of_cross_v))                          #Split the data on x-cross val
+    percentages = []
 
-      elif classNumber == 1:
-        #print(self.mlp_init)
-        #print(values)
-        for i in range(1):
-          #print(len(self.mlp_init[-1]))
-          l = []
-          for k in range(len(values[-1])):   #for every xi
-            l.append(float(values[-1][k])*float(self.mlp_init[-2][k][i]))  #do xiwi
-          summation = sum(l)
+    #Get the size of the testing
+    random_list = random.sample(range(len(preProcess.df)), len(preProcess.df)) 
+    testing_size = len(preProcess.df) - training_size
+
+    for run_num in range(type_of_cross_v):
+      
+
+      #First run our model to initilize the weights
+      preProcess.oneHot()
+      modeling = MLP.Model()
+      
+      modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes))
+
+      testing_list = []
+      training_list = []
+
+      testing_list = random_list[run_num*testing_size:testing_size*(run_num+1)]
+
+      random_list2 = []
+
+      for k in random_list:
+        random_list2.append(k)
+
+      for j in testing_list:
+        random_list2.remove(j)
+
+      for l in random_list2:
+        training_list.append(l)
+
+      #here are dataframes that we can acually use 
+      training_df =  preProcess.df.iloc[training_list]
+      testing_df_with_labels = preProcess.df.iloc[testing_list]
+      testing_df = testing_df_with_labels.iloc[: , :-1]
+      
+      
+      
+      for q in range(1000):
+        #print('hello')
         
-        output = summation
-
-        self.output = output
-
-        #print('output',output)
+        for i in range(len(training_df)):   #len(training_df.iloc[0])
+        
 
 
-        #Decision Circuit
-      else:
-        layer_outputs = []
-        for i in range(len(self.mlp_init[-1][0])):
-          #print(len(self.mlp_init[-1]))
-          l = []
-          for k in range(len(values[-1])):   #for every xi
-            l.append(float(values[-1][k])*float(self.mlp_init[-1][k][i]))  #do xiwi
-          summation = sum(l) #Sum of all xiwis
-          sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
-          layer_outputs.append(sigmoid) #append for each input
-
-        values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
-      
-      if classNumber == 0:
-
-        sum_of_soft = []
-        for i in values[-1]:
-          softmax1 = (math.e**i)
-          sum_of_soft.append(softmax1)
+        #for i in range(len(preProcess.folds[0:8])): 
+          modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
+          modeling.Back_Prop(eta,0,[preProcess.oneHotDict,training_df.values[i,-1]],len(preProcess.classes))
           
-        the_sum_of_soft = sum(sum_of_soft)
+        values = []
+        actual = []
 
-        output_values = []
+      #print(len(testing_df))
 
-        for i in values[-1]:
-          softmax2 = (math.e**i)/the_sum_of_soft
-          output_values.append(softmax2)
+      #for i in range(len(testing_df)):
 
-        values[-1] = output_values
+        
+        #print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
+
+      #print(training_df)
+
+      uniques = training_df['Class'].unique()
+      
+      for i in range(len(testing_df)):
+        modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
+        #print(f'\n\nFinal Output {i}: ',uniques[modeling.values[-1].index(max(modeling.values[-1]))])
+
+
+        if testing_df_with_labels.values[i,-1] == uniques[modeling.values[-1].index(max(modeling.values[-1]))]:
+          superscore += 1
+
 
       
-    self.values = values
-
-  def Back_Prop(self,eta,classNumber,actual,output_size):  
-    #print(self.mlp_init)
-    #print(self.mlp_init)
-    deltas=[]  
-    for x in range(len(self.mlp_init)):
-      deltas.append([])
-
-    #print(deltas)
-    #deltas[2][] = 1
-    #deltas[1].append(1)
-    #deltas[2].append(2)
-    #print(deltas)
-
-    counter = 0
-    for i in reversed(range(len(self.mlp_init))):   #go through every layer backwards
-      #print(self.mlp_init[i])
-      farthest_layer_right = self.mlp_init[i]    #grab the last layer
-      #print(len(farthest_layer_right)) 
-
-      if i == len(self.mlp_init)- 1:    #output layer
-        #print(len(self.mlp_init))
-        #print('hello :)')
-        if classNumber == 1:
-          diff = self.output - actual                   #delta is actual - predicted * derivative of the actication function. So for the sigmoid layers this would be (ri-yi)(oj(1-oj)) and linear it would just be (ri-yi) * possibly C
-
-          deltas[counter].append(diff)
-          
-          #print(self.mlp_init[-1])
-
-          #self.mlp_init[i][len(self.mlp_init[-1][-1])][self.mlp_init[-1][-1][-1]] = self.mlp_init[i][len(self.mlp_init[-1][-1])][self.mlp_init[-1][-1][-1]] + eta*diff*self.output
-          #print(diff)
-        else:
-          actualClass = actual[1]
-          actualOneHot = actual[0]
-
-          for j in range(len(self.values[i])):
-            if j < len(actualOneHot):
-              diff = actualOneHot.get(actualClass)[j] - self.values[i][j]
-              deltas[0].append(diff)
-
-      else:
-
-        for j in range(len(farthest_layer_right[0])): 
-          #print(j) 
-          #print(i)
-          #print(self.values)
-          #print(self.values[0][3])
-
-          xi = self.values[i+1][j]
 
 
-          #print('asdfasdf',self.values)
+        #values.append(modeling.values[-1].index(max(modeling.values[-1])))
+        #actual.append(preProcess.folds[9][i][-1])
 
-          #weight_sum = 0
-          sumwih_deltai = 0
-          deltai = 0
-          weight_s = 0
+    #for i in range(len(values)):
+    #  print(preProcess.classes)
+    #  values[i] = preProcess.classes[values[i]]
+    #
+    #print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
 
-          for l in range(len(self.mlp_init[i+1][0])):
-            #print(len(self.mlp_init[i+1][0]))
 
-            #print(self.mlp_init[i+1])
-            if l < len(deltas[counter]):
-              deltai = deltas[counter][l]
-              for m in range(len(farthest_layer_right)): 
-                weight_s = self.mlp_init[i][m][l]
 
-              sumwih_deltai += weight_s*deltai
-          try:
-            delcalc = sumwih_deltai*(xi)*(xi-1) 
-            deltas[counter+1].append(delcalc)
-          except:
-            pass
 
+
+    print(superscore)
+    print(preProcess.df)
+
+
+    print(superscore/len(preProcess.df))
+  #regression
+  else:
+
+
+    #First run our model to initilize the weights
+    modeling = MLP.Model()
+    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,1)
+
+
+    #Define what type of cross fold validation we will be doing
+    type_of_cross_v = 10
+
+    #Get the size of the training
+    training_size = math.ceil(len(preProcess.df)*(type_of_cross_v-1)/(type_of_cross_v))                          #Split the data on x-cross val
+    percentages = []
+
+    #Get the size of the testing
+    random_list = random.sample(range(len(preProcess.df)), len(preProcess.df)) 
+    testing_size = len(preProcess.df) - training_size
+
+
+    testing_list = []
+    training_list = []
+    #This is hardcoded but will need to be changed to fit crossv
+    testing_list = random_list[0*testing_size:testing_size*(0+1)]
+
+    random_list2 = []
+
+    for k in random_list:
+      random_list2.append(k)
+
+    for j in testing_list:
+      random_list2.remove(j)
+
+    for l in random_list2:
+      training_list.append(l)
+
+    #here are dataframes that we can acually use 
+    training_df =  preProcess.df.iloc[training_list]
+    testing_df_with_labels = preProcess.df.iloc[testing_list]
+    testing_df = testing_df_with_labels.iloc[: , :-1]
+
+    
+    for q in range(100):
+      
+      for i in range(len(training_df)):   #len(training_df.iloc[0])
 
         
 
-        counter = counter + 1  
-    #print('Fowards')
-    #print(self.mlp_init)
-    #print(self.values)
-    #print(deltas)
-    deltas.reverse()
-    #print(self.mlp_init)
-
-    for i in range(len(self.mlp_init)):
-      layer = self.mlp_init[i]
-      for j in range(len(layer)):
-        neuron = layer[j]
-        for k in range(len(neuron)):
-          if k < len(self.mlp_init[i][j]) and j < len(self.values[i]) and k < len(deltas[i]):
-            self.mlp_init[i][j][k] = self.mlp_init[i][j][k] + eta*deltas[i][k]*self.values[i][j]
+        #print('asdlkjfhasdf',len(preProcess.folds[0:8]))
 
 
-      #print(counter)
-            #delta = learning_rate* diff *
-          #else: #hidden layers
-          #  self.mlp_init[i][j][k] = k + eta*delta*self.values[i][j]
-    # print(self.mlp_init)
-#we need weight, xji, oj (for error), (oj(1-oj)), actual-predicted
-#weight = weight - learning_rate * error * input
+        #print('ehllo',preProcess.df.values[i,0:-1])
+        #print(len(preProcess.df.values[i,0:-1].astype('float')))
+        #print(preProcess.value)
+
+        modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
+        #print('modeling.output',modeling.output)
+
+        #print('Weights before bp : ',modeling.mlp_init)                  #important
+
+        #print(modeling.output)
+        #print(preProcess.df.values[i,-1])
+        #print(len(preProcess.df.values[i,-1]))
+
+        
+        #print('Training things',training_df.values[i,0:-1])
+        #print('The preprocessing actual that we are sending in.',preProcess.df.values[i,-1])
 
 
-# learning_rate = 0.5
-# modeling = Model()
-# modeling.run(3, [4,3,2], 1)
-# input = [1,0.5,0.75]
-# modeling.forwardProp(input,1)
-# modeling.Back_Prop(learning_rate)
+        modeling.Back_Prop(eta,1,training_df.values[i,-1],1)
+        #print('Values inside the nodes xis : ',modeling.values)                      #These four important
+        #print('Weights connecting the nodes after bp : ',modeling.mlp_init)
+        #print('Output of forwards prop : ',modeling.output)
+
+
+        #print('\n Cycle -------------------------------- \n')
+
+    values = []
+    actual = []
+    for i in range(len(testing_df)):
+      print(f'Goal {i} : ', testing_df_with_labels.values[i,-1])
+
+
+    for i in range(len(testing_df)):   #len(training_df.iloc[0])
+
+      #print('asdlkjfhasdf',len(preProcess.folds[0:8]))
+
+
+      #print('ehllo',preProcess.df.values[i,0:-1])
+      #print(len(preProcess.df.values[i,0:-1].astype('float')))
+      #print(preProcess.value)
+
+      modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
+      print(f'\n\nFinal Output {i}: ',modeling.output)
+
+    #print(training_df)
+
+    '''for i in range(len(training_df)):
+      #print(modeling.mlp_init)
+      modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
+      print(modeling.output)'''
+      #print(training_df.iloc[i])
+
+    #for j in range(len(testing_df)):
+      #print(modeling.mlp_init)
+      #print(modeling.values)
+      #modeling.forwardProp(testing_df.values[j,0:-1].astype('float'),preProcess.value)
+      #print(testing_df.iloc[j])
+      
+
+
+
+
+      #print(modeling.output)
+
+
+
+
+    #print(modeling.mlp_init)
+    #for i in range(len(preProcess.df)-lengthtogo-3):
+
+      #print(len(preProcess.df)-lengthtogo)
+
+      
+      
+      #print(preProcess.df.values[i+len(preProcess.folds[0:8]),0:-1].astype('float'))
+
+
+      #modeling.forwardProp(preProcess.df.values[i+lengthtogo,0:-1].astype('float'),preProcess.value)
+
+      #print('hhhh',preProcess.df.values[i+lengthtogo,0:-1].astype('float'))
+      #print('iiii',preProcess.df.values[i+lengthtogo])
+      #print('outputjjj',modeling.output)
+
+      
+      #print(modeling.values)
+      #print(modeling.output)
+
+
+
+      #values.append(modeling.output)
+      #print(i)
+      #print(len(preProcess.folds[9]))
+      #actual.append(preProcess.folds[9][i][-1])
+
+    #print("\n\n\nTHIS IS THE VALUES: \n", values, "\nACTUAL:", actual)
+
+  
+ 
+
+
+
+#calls main
+main()
+
+# makes sure that the python classes are taken out after execution
+for i in range(len(classInputArray)):
+  fileName = classInputArray[i][1]
+  os.remove(fileName)
