@@ -18,9 +18,9 @@ import math
 
 #----Python Classes import----
 
-classInputArray = [['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/preprocessing.py?raw=true','preprocessing.py'],
-                   ['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/loss.py?raw=true', 'loss.py'],
-                   ['https://github.com/IsaacBoyd2/testing/blob/main/Project3/code/mlp.py?raw=true', 'mlp.py']]
+classInputArray = [['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/preprocessing.py?raw=true','preprocessing.py'],
+                   ['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/loss.py?raw=true', 'loss.py'],
+                   ['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/mlp.py?raw=true', 'mlp.py']]
 
 #writes our code from github to our current local file
 for i in range(len(classInputArray)):
