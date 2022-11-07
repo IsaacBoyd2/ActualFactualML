@@ -3,7 +3,7 @@
 #Code by: Isaac Boyd, James Lucas 
 
 ##Code For: Preprocessing
-##Completed: 10-19-2022
+##Completed: 11-7-2022
 ##References: NA
 
 #-----------------------imports-------------------------
@@ -267,7 +267,6 @@ class Preprocessing:
         
         foldTotal.append(fold)
         
-
       self.folds = foldTotal
 
   #makes the classes, for classification, into one hot encoded values
@@ -287,11 +286,3 @@ class Preprocessing:
     #saves these values to the Preprocessing object
     self.classes = classes
     self.oneHotDict = oneHotDict
-
-#preProcess = Preprocessing()
-#preProcess.process()
-#preProcess.normalize()
-#preProcess.oneHot()
-#preProcess.fold()
-
-#print(preProcess.oneHotDict[preProcess.classes[0]])
