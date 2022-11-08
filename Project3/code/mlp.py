@@ -133,11 +133,19 @@ class Model:
           #This will grab everything in values starting at values[0]
           for k in range(len(values[i])): 
             #print(i,k,j)
+            print('xi*wi : ',l)
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
+          
+          print('Sum xi*wi : ',summation)
+          
 
           sigmoid = 1/(1+(math.e**(-summation)))    #sigmoid function
+
+          print('After sigmoidal activation : ',sigmoid)
           layer_outputs.append(sigmoid) #append for each input
+
+        print('Entire Layer output : ',layer_outputs)
 
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
 
@@ -174,6 +182,8 @@ class Model:
 
 
           sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
+
+
           layer_outputs.append(sigmoid) 
 
         values.append(layer_outputs)
@@ -197,6 +207,7 @@ class Model:
 
       
     self.values = values
+    
 
   def Back_Prop(self,eta,classNumber,actual,output_size):  
     
