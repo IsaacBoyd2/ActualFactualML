@@ -195,7 +195,7 @@ class Model:
 
         values.append(layer_outputs)
 
-      print("Before Softamx : " ,values[-1])
+        print("Before Softamx : " ,values[-1])
       
       if classNumber == 0:
 
