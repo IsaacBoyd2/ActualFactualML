@@ -133,21 +133,23 @@ class Model:
           #This will grab everything in values starting at values[0]
           for k in range(len(values[i])): 
             #print(i,k,j)
-            print('xi*wi : ',l)
+            #print('xi*wi : ',l)
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
           
-          print('Sum xi*wi : ',summation)
+          #print('Sum xi*wi : ',summation)
           
 
           sigmoid = 1/(1+(math.e**(-summation)))    #sigmoid function
 
-          print('After sigmoidal activation : ',sigmoid)
+          #print('After sigmoidal activation : ',sigmoid)
           layer_outputs.append(sigmoid) #append for each input
 
-        print('Entire Layer output : ',layer_outputs)
+        #print('Entire Layer output : ',layer_outputs)
 
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
+
+      
 
       #output layer
       elif classNumber == 1:
@@ -164,6 +166,11 @@ class Model:
         values.append(layer_outputs)
 
         self.output = output
+
+        print('Before linear activation : ', values[-1])
+       
+        print('Linear Output : ', self.output)
+
 
         self.values = values
 
@@ -187,6 +194,8 @@ class Model:
           layer_outputs.append(sigmoid) 
 
         values.append(layer_outputs)
+
+      print("Before Softamx : " ,values[-1])
       
       if classNumber == 0:
 
@@ -204,6 +213,8 @@ class Model:
           output_values.append(softmax2)
 
         values[-1] = output_values
+
+        print('After Softmax : ',values[-1])
 
       
     self.values = values
