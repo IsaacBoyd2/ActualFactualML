@@ -17,6 +17,7 @@ import math
 import random as random
 import sys
 
+import loss as lss
 #----------------------classes-------------------------
 
 class Model:
@@ -86,7 +87,7 @@ class Model:
 
     '''
     
-  def forwardProp(self,input, classNumber):      #potentially need to do something for just the input layers
+  def forwardProp(self,input,classNumber):      #potentially need to do something for just the input layers
     values = [[]]
     values[0] = input
     #loops through each layer.
@@ -151,5 +152,32 @@ class Model:
 
       
     self.values = values
+
+
+  def algGA(self):
+    pass
+
+  def algGE(self):
+    pass
+
+  def algPSO(self, particles):
+    #----Hyper-Parameters----
+    omega = 0.1
+    c_1 = 1.496
+    c_2 = 1.496
+
+    #----Variables----
+    parts = particles
+    r_1 = 0
+    r_2 = 0
+    numPart = 8
+    loops = 10
+    pb = []
+
+    for i in range(loops):
+      for j in range(numPart):
+        if i == 0 and j == 0:
+          for k in range(numPart):
+            parts[k].forwardProp(#FINISH THIS)
 
   
