@@ -89,6 +89,7 @@ class Model:
     
   def forwardProp(self,input,classNumber):      #potentially need to do something for just the input layers
     values = [[]]
+    print('Current Weights:',self.mlp_init,'\n')
     values[0] = input
     #loops through each layer.
     for i in range(len(self.mlp_init)):
@@ -152,6 +153,9 @@ class Model:
 
       
     self.values = values
+
+  def change_mlp_init(self, change):
+    self.mlp_init = change
 
 
   def algGA(self):
