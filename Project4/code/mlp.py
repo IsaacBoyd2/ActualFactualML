@@ -331,4 +331,5 @@ class Model:
       for j in range(numPart):
         if i == 0 and j == 0:
           for k in range(numPart):
-            parts[k].forwardProp(#FINISH THIS)
+            pass
+            #parts[k].forwardProp(#FINISH THIS)
