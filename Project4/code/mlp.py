@@ -17,6 +17,7 @@ import math
 import random as random
 import sys
 
+#import loss as lss
 #----------------------classes-------------------------
 
 class Model:
@@ -28,72 +29,43 @@ class Model:
     self.mlp_init = []
     self.values = []
     
-  def run(self, input_size, hidden_sizes, output_size,flag):  
+  def run(self, input_size, hidden_sizes, output_size):  
     #Initilize the network to have random weights between 0 and 1.
 
     mlp_init = []   #The network
 
-    if flag == 0:
+    #Input
+    hidden_nodes = []
+    for i in range(input_size):
+      hidden_node = []
+      for i in range(hidden_sizes[0]):
+        hidden_node.append(random.random())
+      hidden_nodes.append(hidden_node)
 
-      #Input
+    mlp_init.append(hidden_nodes)
+    
+
+    #Init number of weights between each hidden layer
+    for sizes in range(len(hidden_sizes)-1):
       hidden_nodes = []
-      for i in range(input_size):
+      for i in range(hidden_sizes[0+sizes]):
         hidden_node = []
-        for i in range(hidden_sizes[0]):
+        for j in range(hidden_sizes[1+sizes]):
           hidden_node.append(random.random())
         hidden_nodes.append(hidden_node)
 
       mlp_init.append(hidden_nodes)
-      
 
-      
-
-      #Init number of weights between each hidden layer
-      for sizes in range(len(hidden_sizes)-1):
-        hidden_nodes = []
-        for i in range(hidden_sizes[0+sizes]):
-          hidden_node = []
-          for j in range(hidden_sizes[1+sizes]):
-            hidden_node.append(random.random())
-          hidden_nodes.append(hidden_node)
-
-        mlp_init.append(hidden_nodes)
-
-      #output layer
-      output_nodes = []
-      for i in range(hidden_sizes[-1]):
-        output_node = []
-        for i in range(output_size):
-          output_node.append(random.random())
-        output_nodes.append(output_node)
-      
-      
-      mlp_init.append(output_nodes)
-
-    else:
-
-      #Input
-      hidden_nodes = []
-      for i in range(input_size):
-        hidden_node = []
-        for i in range(output_size):
-          hidden_node.append(random.random())
-        hidden_nodes.append(hidden_node)
-
-      mlp_init.append(hidden_nodes)
-      
-
-      #output layer
-      #output_nodes = []
-      #for i in range(input_size):
-      #  output_node = []
-      #  for i in range(output_size):
-      #    output_node.append(random.random())
-      #  output_nodes.append(output_node)
-      
-      
-      #mlp_init.append(output_nodes)
-
+    #output layer
+    output_nodes = []
+    for i in range(hidden_sizes[-1]):
+      output_node = []
+      for i in range(output_size):
+        output_node.append(random.random())
+      output_nodes.append(output_node)
+    
+    
+    mlp_init.append(output_nodes)
 
     #print(mlp_init)
 
@@ -115,87 +87,51 @@ class Model:
 
     '''
     
-  def forwardProp(self,input, classNumber):
+  def forwardProp(self,input,classNumber):      #potentially need to do something for just the input layers
     values = [[]]
     values[0] = input
-
-
-    #loops through each layer.  (ex. 0,1,2,3)
+    #loops through each layer.
     for i in range(len(self.mlp_init)):
       layer_outputs = []
- 
+      #loops through each node      
       if i != len(self.mlp_init)-1: #As long as we are not in the last layer
-
-        #loops through each node according to the next layer length (ex. 0,1,2,3)  
-        for j in range(len(self.mlp_init[i+1])): 
+        for j in range(len(self.mlp_init[i+1])):  #This grabs the length of the next layer
           l = []
-
-          #This will grab everything in values starting at values[0]
-          for k in range(len(values[i])): 
-            #print(i,k,j)
-            #print('xi*wi : ',l)
+          for k in range(len(values[i])):   #for every xi
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          
-          #print('Sum xi*wi : ',summation)
-          
-
-          sigmoid = 1/(1+(math.e**(-summation)))    #sigmoid function
-
-          #print('After sigmoidal activation : ',sigmoid)
+          #print("SUMMATION: ", summation)
+          sigmoid = 1/(1+round(math.e**(-summation),8))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
 
-        #print('Entire Layer output : ',layer_outputs)
-
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
-
-      
+        #print(values)
 
       #output layer
+
       elif classNumber == 1:
-
-        #Linear = No activation
-        l = []
-        for k in range(len(values[-1])):  
-          l.append(float(values[-1][k])*float(self.mlp_init[-1][k][0]))  #do xiwi
-        summation = sum(l)
+        for i in range(1):
+          l = []
+          for k in range(len(values[-1])):   #for every xi
+            l.append(float(values[-1][k])*float(self.mlp_init[-2][k][i]))  #do xiwi
+          summation = sum(l)
+        
         output = summation
-
-        layer_outputs = []
-        layer_outputs.append(output)
-        values.append(layer_outputs)
 
         self.output = output
 
-        #print('Before linear activation : ', values[-2])
-       
-        #print('Linear Output : ', self.output)
-
-
-        self.values = values
-
-        #print('Output Values for layers 3->1 : ',self.values)
-        #print('Output at layer 0 : ',self.output)
-
-
+      #Decision Circuit
       else:
         layer_outputs = []
         for i in range(len(self.mlp_init[-1][0])):
- 
           l = []
           for k in range(len(values[-1])):   #for every xi
             l.append(float(values[-1][k])*float(self.mlp_init[-1][k][i]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-
-
           sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
+          layer_outputs.append(sigmoid) #append for each input
 
-
-          layer_outputs.append(sigmoid) 
-
-        values.append(layer_outputs)
-
-        
+        values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
       
       if classNumber == 0:
 
@@ -212,124 +148,256 @@ class Model:
           softmax2 = (math.e**i)/the_sum_of_soft
           output_values.append(softmax2)
 
-        #print('weights', self.mlp_init[-1])
-        #print("Before Softamx : " ,values[-1])
-
         values[-1] = output_values
-
-        #print('After Softmax : ',values[-1])
 
       
     self.values = values
-    
-
-  def Back_Prop(self,eta,classNumber,actual,output_size):  
-    
-    #Preapre Deltas for delta rule
-    deltas=[]  
-    for x in range(len(self.values)):
-      deltas.append([])
-
-    counter = 0
-    #go through every layer backwards (ex. 3,2,1,0)
-    for i in reversed(range(len(self.values))):   #we need #of deltas = # of layers so len delta = len values.... Used to be len deltas = len self.mlp_intit
-
-      #farthest_layer_right = self.mlp_init[0]
-
-      if i == len(self.values)- 1:    #output layer
-        if classNumber == 1:
-          diff = actual - self.output    #(t - a)    t = actual a = guess
-          deltas[counter].append(diff)   
-          
-
-        else:
-          actualClass = actual[1]
-          actualOneHot = actual[0]
-
-          for j in range(len(self.values[i])):
-            diff = actualOneHot.get(actualClass)[j] - self.values[i][j]
-            deltas[0].append(diff)
-
-      else:
-        #print(counter)
-
-        #Go through every node in the current Layer and assign each one a delta
-        for j in range(len(self.values[i])): 
-
-          xi = self.values[i][j]
-          sumwih_deltai = 0
-
-          
-
-          #This grabs how many nodes are in the layer ahead. That is how many components will be in each delta calc. (ex. 0,1)
-          for l in range(len(deltas[counter-1])):
-
-            deltai = deltas[counter-1][l]
-            weight_s = self.mlp_init[i][j][l]  
-
-            #get sum(wiDi)
-            sumwih_deltai += weight_s*deltai
-          
-          #Get delta for the given node.
-          delcalc = sumwih_deltai*(xi)*(1-xi) 
-          deltas[counter].append(delcalc)
- 
 
 
-
-
-    
-
-      counter = counter + 1  
-
-    #print('Before weights update : ',self.mlp_init)
-
-    deltas.reverse()
-    #print(deltas)
-
-    #Now we need to update the weights
-    #go through every layer
-    for i in range(len(self.mlp_init)):
-      layer = self.mlp_init[i]
-      #go through every node in every layer
-      for j in range(len(layer)):
-        neuron = layer[j]
-        #go through every weight
-        for k in range(len(neuron)):
-          #print(self.mlp_init[i][j][k])
-          #print(self.values[i][j])
-
-          #should be every weight  + eta*delta in from of the weight*xi that caused the weight
-          self.mlp_init[i][j][k] = self.mlp_init[i][j][k] + eta*deltas[i+1][k]*self.values[i][j]    #delta needs to be +1 so we do not pull from the input layer
-
-    #print('After weights update : ',self.mlp_init)
-    
-  def change_mlp_init(self, change):
-    self.mlp_init = change
-    
   def algGA(self):
     pass
 
   def algGE(self):
     pass
 
-  def algPSO(self, particles):
+  def algPSO(self, particles, dataType, training_df, testing_df, testing_df_with_labels):
     #----Hyper-Parameters----
-    omega = 0.1
-    c_1 = 1.496
-    c_2 = 1.496
+    # c_1 = 1.496
+    # c_2 = 1.496
+
+    c_1 = .1
+    c_2 = .1
 
     #----Variables----
     parts = particles
+    uniques = training_df['Class'].unique()
     r_1 = 0
     r_2 = 0
-    numPart = 8
-    loops = 10
+    loops = 1000
     pb = []
 
-    for i in range(loops):
-      for j in range(numPart):
-        if i == 0 and j == 0:
-          for k in range(numPart):
-            pass
-            #parts[k].forwardProp(#FINISH THIS)
+    #used to count all of the weights in the model objects (used for velocity)
+    totalEdges = 0
+    for i in range(len(parts[0].mlp_init)-1):
+      totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
+    totalEdges += len(uniques) * len(parts[0].mlp_init[-1])
+
+    #make a velocity array that will hold 0 velocities for all weights
+    v = np.zeros((len(parts), totalEdges))
+    gb = [0, np.zeros(totalEdges)]
+    
+    #classification
+    if dataType == 0:
+      for i in range(loops):
+        for j in range(len(parts)):
+          #used to hold the correct and the guessed classes
+          values = []
+          actual = []
+
+          #the first particle
+          if i == 0 and j == 0:
+            for k in range(len(training_df)):
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              actual.append(training_df.values[k,-1])
+              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+
+            lossValues = lss.Loss()
+            lossValues.calculate(uniques, values, actual)
+            
+            #used to hold all values of the weights themselves
+            temp = []
+            for k in range(len(parts[j].mlp_init)):
+              for l in range(len(parts[j].mlp_init[k])):
+                for m in range(len(parts[j].mlp_init[k][l])):
+                  temp.append(parts[j].mlp_init[k][l][m])
+
+            #sets the global best and the personal best because it is the first loop
+            gb = [lossValues.F1, temp]
+            pb.append([lossValues.F1, temp])
+
+          #the first loop through the particles
+          elif i == 0:
+            for k in range(len(training_df)):
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              actual.append(training_df.values[k,-1])
+              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+
+            lossValues = lss.Loss()
+            lossValues.calculate(uniques, values, actual)
+
+            #used to hold all values of the weights themselves
+            temp = []
+            for k in range(len(parts[j].mlp_init)):
+              for l in range(len(parts[j].mlp_init[k])):
+                for m in range(len(parts[j].mlp_init[k][l])):
+                  temp.append(parts[j].mlp_init[k][l][m])
+
+            if gb[0] < lossValues.F1:
+              gb = [lossValues.F1, temp]
+            
+            pb.append([lossValues.F1, temp])
+
+          #second or more loops through the particles
+          else:
+            #runs the model with the given training set
+            for k in range(len(training_df)):
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              actual.append(training_df.values[k,-1])
+              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+
+            #calculates loss on that model
+            lossValues = lss.Loss()
+            lossValues.calculate(uniques, values, actual)
+
+            #check for personal best F1 score
+            if pb[j][0] < lossValues.F1:
+              #used to hold all values of the weights themselves
+              temp = []
+              for k in range(len(parts[j].mlp_init)):
+                for l in range(len(parts[j].mlp_init[k])):
+                  for m in range(len(parts[j].mlp_init[k][l])):
+                    temp.append(parts[j].mlp_init[k][l][m])
+
+              pb[j] = [lossValues.F1, temp]
+
+            #check for global best F1 score
+            if gb[0] < lossValues.F1:
+              gb = [lossValues.F1,temp]
+              print(i, gb[0])
+          
+            
+
+
+        for j in range(len(parts)):
+          counter = 0
+          #update velocity and position
+          for k in range(len(parts[j].mlp_init)):
+            for l in range(len(parts[j].mlp_init[k])):
+              for m in range(len(parts[j].mlp_init[k][l])):
+                r_1 = random.uniform(0,1)
+                r_2 = random.uniform(0,1)
+                #print("\n\nBefore: ", v[j][counter])
+                v[j][counter] = v[j][counter] + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
+                #print("After: ", v[j][counter])
+                parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
+                counter += 1
+
+            
+
+
+    #regression
+    else:
+      for i in range(loops):
+        for j in range(len(parts)):
+          #used to hold the correct and the guessed classes
+          values = []
+          actual = []
+
+          #the first particle
+          if i == 0 and j == 0:
+            for k in range(len(training_df)):
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              actual.append(training_df.values[k,-1])
+              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+
+            lossValues = lss.Loss()
+            lossValues.calculateReg(values, actual)
+            
+            #used to hold all values of the weights themselves
+            temp = []
+            for k in range(len(parts[j].mlp_init)):
+              for l in range(len(parts[j].mlp_init[k])):
+                for m in range(len(parts[j].mlp_init[k][l])):
+                  temp.append(parts[j].mlp_init[k][l][m])
+
+            #sets the global best and the personal best because it is the first loop
+            gb = [lossValues.mse, temp]
+            pb.append([lossValues.mse, temp])
+
+          #the first loop through the particles
+          elif i == 0:
+            for k in range(len(training_df)):
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              actual.append(training_df.values[k,-1])
+              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+
+            lossValues = lss.Loss()
+            lossValues.calculateReg(values, actual)
+
+            #used to hold all values of the weights themselves
+            temp = []
+            for k in range(len(parts[j].mlp_init)):
+              for l in range(len(parts[j].mlp_init[k])):
+                for m in range(len(parts[j].mlp_init[k][l])):
+                  temp.append(parts[j].mlp_init[k][l][m])
+
+            if gb[0] > lossValues.mse:
+              gb = [lossValues.mse, temp]
+            
+            pb.append([lossValues.mse, temp])
+
+          #second or more loops through the particles
+          else:
+            #runs the model with the given training set
+            for k in range(len(training_df)):
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              actual.append(training_df.values[k,-1])
+              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+
+            #calculates loss on that model
+            lossValues = lss.Loss()
+            lossValues.calculateReg(values, actual)
+
+            #check for personal best mse score
+            if pb[j][0] > lossValues.mse:
+              #used to hold all values of the weights themselves
+              temp = []
+              for k in range(len(parts[j].mlp_init)):
+                for l in range(len(parts[j].mlp_init[k])):
+                  for m in range(len(parts[j].mlp_init[k][l])):
+                    temp.append(parts[j].mlp_init[k][l][m])
+
+              pb[j] = [lossValues.mse, temp]
+
+            #check for global best mse score
+            if gb[0] > lossValues.mse:
+              gb = [lossValues.mse,temp]
+              print(i, gb[0])
+          
+            
+
+
+        for j in range(len(parts)):
+          counter = 0
+          #update velocity and position
+          for k in range(len(parts[j].mlp_init)):
+            for l in range(len(parts[j].mlp_init[k])):
+              for m in range(len(parts[j].mlp_init[k][l])):
+                r_1 = random.uniform(0,1)
+                r_2 = random.uniform(0,1)
+                v[j][counter] = v[j][counter] + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
+                parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
+                counter += 1
+
+#---------Testing-Area------------
+# import requests
+
+# with open('loss.py', 'w') as f:
+#     r = requests.get('https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/loss.py?raw=true')
+#     f.write(r.text)
+
+# import loss as lss
+
+# models = []
+# hiddenArray = [3,2]
+
+# for i in range(30):
+#   model = Model()
+#   model.run(2, hiddenArray, 4)
+#   models.append(model)
+
+# training = pd.DataFrame(columns=['length','height','Class'], data=[[1,1,1],[2,2,2],[3,3,3],[4,4,4],[1,2,1],[2,3,2],[3,2,3],[4,2,4],[1,3,1],[2,1,2],[3,4,3],[4,1,4],[1,4,1],[2,4,2],[3,1,3],[4,1,4]])
+# testing = pd.DataFrame(columns=['length','height','Class'],data=[[1,1,1],[3,3,3]])
+
+# topModel = Model()
+# topModel.algPSO(models, 1, training, testing.iloc[:,:-1], testing)
