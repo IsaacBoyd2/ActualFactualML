@@ -17,7 +17,11 @@ import math
 import random as random
 import sys
 
-import loss.py as lss
+with open('loss.py', 'w') as f:
+  r = requests.get('https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/loss.py?raw=true')
+  f.write(r.text)
+
+import loss as lss
 #----------------------classes-------------------------
 
 class Model:
