@@ -176,7 +176,7 @@ class Model:
   def algPSO(self, particles, dataType, training_df, testing_df, testing_df_with_labels):
     #----Hyper-Parameters----
 
-    c_1 = 1.496
+    c_1 = 1.1
     c_2 = 1.496
 
     #----Variables----
