@@ -104,7 +104,7 @@ class Model:
           for k in range(len(values[i])):   #for every xi
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          if summation > 25:
+          if summation > 10:
             sigmoid = 1
           else:
             sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
@@ -132,7 +132,7 @@ class Model:
           for k in range(len(values[-1])):   #for every xi
             l.append(float(values[-1][k])*float(self.mlp_init[-1][k][i]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          if summation > 25:
+          if summation > 10:
             sigmoid = 1
           else:
             sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
@@ -144,7 +144,7 @@ class Model:
 
         sum_of_soft = []
         for i in values[-1]:
-          if i > 25:
+          if i > 10:
             softmax1 = 1
           else: 
             softmax1 = (math.e**i)
@@ -155,7 +155,7 @@ class Model:
         output_values = []
 
         for i in values[-1]:
-          if i > 25:
+          if i > 10:
             softmax2 = 1
           else:
             softmax2 = (math.e**i)/the_sum_of_soft
