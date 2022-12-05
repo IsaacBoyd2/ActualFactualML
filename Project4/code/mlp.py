@@ -104,8 +104,8 @@ class Model:
           for k in range(len(values[i])):   #for every xi
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          if summation > 1000:
-            sigmoid = 10000
+          if summation > 100:
+            sigmoid = 1000
           else:
             sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
@@ -132,8 +132,8 @@ class Model:
           for k in range(len(values[-1])):   #for every xi
             l.append(float(values[-1][k])*float(self.mlp_init[-1][k][i]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          if summation > 1000:
-            sigmoid = 10000
+          if summation > 100:
+            sigmoid = 1000
           else:
             sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
