@@ -179,8 +179,8 @@ class Model:
     # c_1 = 1.496
     # c_2 = 1.496
 
-    c_1 = 2.5
-    c_2 = 2.5
+    c_1 = 1.1
+    c_2 = 1.1
 
     #----Variables----
     parts = particles
@@ -203,6 +203,7 @@ class Model:
     #classification
     if dataType == 0:
       for i in range(loops):
+        print("LOOP ", i)
         for j in range(len(parts)):
           #used to hold the correct and the guessed classes
           values = []
