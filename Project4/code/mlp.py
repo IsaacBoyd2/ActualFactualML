@@ -291,7 +291,7 @@ class Model:
               for m in range(len(parts[j].mlp_init[k][l])):
                 r_1 = random.uniform(0,1)
                 r_2 = random.uniform(0,1)
-                v[j][counter] = (.1*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
+                v[j][counter] = (.8*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
 
@@ -388,7 +388,7 @@ class Model:
               for m in range(len(parts[j].mlp_init[k][l])):
                 r_1 = random.uniform(0,1)
                 r_2 = random.uniform(0,1)
-                v[j][counter] = (.1*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
+                v[j][counter] = (.8*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
 
