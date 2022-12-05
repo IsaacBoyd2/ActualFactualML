@@ -105,7 +105,7 @@ class Model:
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
           if summation > 75:
-            sigmoid = 1000
+            sigmoid = 1
           else:
             sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
@@ -133,7 +133,7 @@ class Model:
             l.append(float(values[-1][k])*float(self.mlp_init[-1][k][i]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
           if summation > 75:
-            sigmoid = 1000
+            sigmoid = 1
           else:
             sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
@@ -145,7 +145,7 @@ class Model:
         sum_of_soft = []
         for i in values[-1]:
           if i > 75:
-            softmax1 = 1000
+            softmax1 = 1
           else: 
             softmax1 = (math.e**i)
           sum_of_soft.append(softmax1)
@@ -156,7 +156,7 @@ class Model:
 
         for i in values[-1]:
           if i > 75:
-            softmax2 = 1000
+            softmax2 = 1
           else:
             softmax2 = (math.e**i)/the_sum_of_soft
           output_values.append(softmax2)
