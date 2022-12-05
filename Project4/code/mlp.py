@@ -144,7 +144,10 @@ class Model:
 
         sum_of_soft = []
         for i in values[-1]:
-          softmax1 = (math.e**i)
+          if i > 75:
+            softmax1 = 1000
+          else: 
+            softmax1 = (math.e**i)
           sum_of_soft.append(softmax1)
           
         the_sum_of_soft = sum(sum_of_soft)
@@ -152,7 +155,10 @@ class Model:
         output_values = []
 
         for i in values[-1]:
-          softmax2 = (math.e**i)/the_sum_of_soft
+          if i > 75:
+            softmax2 = 1000
+          else:
+            softmax2 = (math.e**i)/the_sum_of_soft
           output_values.append(softmax2)
 
         values[-1] = output_values
