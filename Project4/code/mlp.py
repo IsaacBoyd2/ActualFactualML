@@ -203,7 +203,7 @@ class Model:
     #classification
     if dataType == 0:
       for i in range(loops):
-        print("LOOP ", i)
+        print("\n\nLOOP ", i)
         for j in range(len(parts)):
           #used to hold the correct and the guessed classes
           values = []
@@ -229,6 +229,7 @@ class Model:
             #sets the global best and the personal best because it is the first loop
             gb = [lossValues.F1, temp]
             pb.append([lossValues.F1, temp])
+            print(j, lossValues.F1)
 
           #the first loop through the particles
           elif i == 0:
@@ -239,6 +240,7 @@ class Model:
 
             lossValues = lss.Loss()
             lossValues.calculate(uniques, values, actual)
+            print(j, lossValues.F1)
 
             #used to hold all values of the weights themselves
             temp = []
@@ -263,6 +265,7 @@ class Model:
             #calculates loss on that model
             lossValues = lss.Loss()
             lossValues.calculate(uniques, values, actual)
+            print(j, lossValues.F1)
 
             #check for personal best F1 score
             if pb[j][0] < lossValues.F1:
@@ -278,7 +281,7 @@ class Model:
             #check for global best F1 score
             if gb[0] < lossValues.F1:
               gb = [lossValues.F1,temp]
-              print(i, gb[0])
+              print("GLOBAL BEST: ", i, gb[0])
           
             
 
