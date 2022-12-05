@@ -104,7 +104,6 @@ class Model:
           for k in range(len(values[i])):   #for every xi
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          print("SUMMATION: " , summation)
           if summation > 50 or summation < -50:
             sigmoid = 1
           else:
