@@ -17,7 +17,7 @@ import math
 import random as random
 import sys
 
-import loss as lss
+import loss.py as lss
 #----------------------classes-------------------------
 
 class Model:
