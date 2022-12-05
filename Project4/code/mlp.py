@@ -176,15 +176,18 @@ class Model:
   def algPSO(self, particles, dataType, training_df, testing_df, testing_df_with_labels):
     #----Hyper-Parameters----
 
-    c_1 = 1.496
-    c_2 = 1.496
+    # c_1 = 1.496
+    # c_2 = 1.496
+
+    c_1 = 2.5
+    c_2 = 2.5
 
     #----Variables----
     parts = particles
     uniques = training_df['Class'].unique()
     r_1 = 0
     r_2 = 0
-    loops = 100
+    loops = 400
     pb = []
 
     #used to count all of the weights in the model objects (used for velocity)
