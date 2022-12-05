@@ -107,7 +107,7 @@ class Model:
           if summation > 10:
             sigmoid = 1
           else:
-            sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
+            sigmoid = float(1/(1+math.e**(-summation)))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
 
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
@@ -135,7 +135,7 @@ class Model:
           if summation > 10:
             sigmoid = 1
           else:
-            sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
+            sigmoid = float(1/(1+math.e**(-summation)))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
 
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
@@ -147,7 +147,7 @@ class Model:
           if i > 10:
             softmax1 = 1
           else: 
-            softmax1 = (math.e**i)
+            softmax1 = float(math.e**i)
           sum_of_soft.append(softmax1)
           
         the_sum_of_soft = sum(sum_of_soft)
@@ -158,7 +158,7 @@ class Model:
           if i > 10:
             softmax2 = 1
           else:
-            softmax2 = (math.e**i)/the_sum_of_soft
+            softmax2 = float((math.e**i)/the_sum_of_soft)
           output_values.append(softmax2)
 
         values[-1] = output_values
