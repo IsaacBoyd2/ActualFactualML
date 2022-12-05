@@ -279,6 +279,8 @@ class Model:
             if gb[0] < lossValues.F1:
               gb = [lossValues.F1,temp]
               print("GLOBAL BEST: ", i, gb[0])
+
+            print(j, lossValues.F1)
           
             
 
