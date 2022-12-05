@@ -165,7 +165,9 @@ class Model:
 
       
     self.values = values
-
+    
+  def change_mlp_init(self, change):
+    self.mlp_init = change
 
   def algGA(self):
     pass
