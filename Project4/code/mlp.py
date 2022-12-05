@@ -165,9 +165,7 @@ class Model:
 
       
     self.values = values
-    
-  def change_mlp_init(self, change):
-    self.mlp_init = change
+
 
   def algGA(self):
     pass
@@ -178,8 +176,11 @@ class Model:
   def algPSO(self, particles, dataType, training_df, testing_df, testing_df_with_labels):
     #----Hyper-Parameters----
 
-    c_1 = 1.496
-    c_2 = 1.496
+    # c_1 = 1.496
+    # c_2 = 1.496
+
+    c_1 = .01
+    c_2 = .01
 
     #----Variables----
     parts = particles
@@ -228,7 +229,6 @@ class Model:
             #sets the global best and the personal best because it is the first loop
             gb = [lossValues.F1, temp]
             pb.append([lossValues.F1, temp])
-            print(j, lossValues.F1)
 
           #the first loop through the particles
           elif i == 0:
@@ -239,7 +239,6 @@ class Model:
 
             lossValues = lss.Loss()
             lossValues.calculate(uniques, values, actual)
-            print(j, lossValues.F1)
 
             #used to hold all values of the weights themselves
             temp = []
@@ -264,7 +263,6 @@ class Model:
             #calculates loss on that model
             lossValues = lss.Loss()
             lossValues.calculate(uniques, values, actual)
-            print(j, lossValues.F1)
 
             #check for personal best F1 score
             if pb[j][0] < lossValues.F1:
@@ -293,7 +291,7 @@ class Model:
               for m in range(len(parts[j].mlp_init[k][l])):
                 r_1 = random.uniform(0,1)
                 r_2 = random.uniform(0,1)
-                v[j][counter] = (.8*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
+                v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
 
@@ -390,7 +388,7 @@ class Model:
               for m in range(len(parts[j].mlp_init[k][l])):
                 r_1 = random.uniform(0,1)
                 r_2 = random.uniform(0,1)
-                v[j][counter] = (.8*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
+                v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
 
