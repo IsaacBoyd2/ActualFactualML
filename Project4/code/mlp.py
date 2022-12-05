@@ -170,8 +170,8 @@ class Model:
     # c_1 = 1.496
     # c_2 = 1.496
 
-    c_1 = 2
-    c_2 = 2
+    c_1 = 1.8
+    c_2 = 1.8
 
     #----Variables----
     parts = particles
