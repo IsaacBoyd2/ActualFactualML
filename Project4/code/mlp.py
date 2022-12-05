@@ -15,7 +15,7 @@ import requests
 import os
 import math
 import random as random
-from decimal import *
+import sys
 
 with open('loss.py', 'w') as f:
   r = requests.get('https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/loss.py?raw=true')
@@ -104,15 +104,15 @@ class Model:
           for k in range(len(values[i])):   #for every xi
             l.append(float(values[i][k])*float(self.mlp_init[i][k][j]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          #print("SUMMATION: ", summation)
-          sigmoid = 1/float(round((1+Decimal(math.e**(-summation))),8))    #sigmoid function
+          if summation > 1000:
+            sigmoid = 10000
+          else:
+            sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
 
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
-        #print(values)
 
       #output layer
-
       elif classNumber == 1:
         for i in range(1):
           l = []
@@ -132,7 +132,10 @@ class Model:
           for k in range(len(values[-1])):   #for every xi
             l.append(float(values[-1][k])*float(self.mlp_init[-1][k][i]))  #do xiwi
           summation = sum(l) #Sum of all xiwis
-          sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
+          if summation > 1000:
+            sigmoid = 10000
+          else:
+            sigmoid = 1/(1+math.e**(-summation))    #sigmoid function
           layer_outputs.append(sigmoid) #append for each input
 
         values.append(layer_outputs) #append all the outputs. (this will be what is "inside" of each node)
