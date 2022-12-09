@@ -184,24 +184,25 @@ class Model:
 
     #----Variables----
     parts = particles
-    uniques = training_df['Class'].unique()
     r_1 = 0
     r_2 = 0
     loops = 400
     pb = []
+    
+    #classification
+    if dataType == 0:
 
-    #used to count all of the weights in the model objects (used for velocity)
-    totalEdges = 0
-    for i in range(len(parts[0].mlp_init)-1):
-      totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
-    totalEdges += len(uniques) * len(parts[0].mlp_init[-1])
+      uniques = training_df['Class'].unique()
+      #used to count all of the weights in the model objects (used for velocity)
+      totalEdges = 0
+      for i in range(len(parts[0].mlp_init)-1):
+        totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
+      totalEdges += len(uniques) * len(parts[0].mlp_init[-1])
 
     #make a velocity array that will hold 0 velocities for all weights
     v = np.zeros((len(parts), totalEdges))
     gb = [0, np.zeros(totalEdges)]
-    
-    #classification
-    if dataType == 0:
+
       for i in range(loops):
         print("\n\nLOOP ", i)
         for j in range(len(parts)):
@@ -310,6 +311,11 @@ class Model:
 
     #regression
     else:
+      totalEdges = 0
+      for i in range(len(parts[0].mlp_init)-1):
+        totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
+      totalEdges += len(parts[0].mlp_init[-1])
+
       for i in range(loops):
         for j in range(len(parts)):
           #used to hold the correct and the guessed classes
