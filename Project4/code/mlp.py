@@ -334,6 +334,7 @@ class Model:
               values.append(parts[j].values[-1])
 
             lossValues = lss.Loss()
+            print("VALUES AND ACTUAL: ", values, "\n\n\n", actual)
             lossValues.calculateReg(values, actual)
             
             #used to hold all values of the weights themselves
