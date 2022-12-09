@@ -314,11 +314,11 @@ class Model:
       totalEdges = 0
       for i in range(len(parts[0].mlp_init)-1):
         totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
-        totalEdges += len(parts[0].mlp_init[-1])
+      totalEdges += len(parts[0].mlp_init[-1])
 
-        #make a velocity array that will hold 0 velocities for all weights
-        v = np.zeros((len(parts), totalEdges))
-        gb = [0, np.zeros(totalEdges)]
+      #make a velocity array that will hold 0 velocities for all weights
+      v = np.zeros((len(parts), totalEdges))
+      gb = [0, np.zeros(totalEdges)]
 
       for i in range(loops):
         for j in range(len(parts)):
@@ -331,7 +331,7 @@ class Model:
             for k in range(len(training_df)):
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
               actual.append(training_df.values[k,-1])
-              values.append(uniques[parts[j].values[-1].index(max(parts[j].values[-1]))])
+              values.append(modeling.values[-1])
 
             lossValues = lss.Loss()
             lossValues.calculateReg(values, actual)
