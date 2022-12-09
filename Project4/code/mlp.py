@@ -176,11 +176,11 @@ class Model:
   def algPSO(self, particles, dataType, training_df, testing_df, testing_df_with_labels):
     #----Hyper-Parameters----
 
-    # c_1 = 1.496
-    # c_2 = 1.496
+    c_1 = 1.496
+    c_2 = 1.496
 
-    c_1 = .01
-    c_2 = .02
+    # c_1 = .01
+    # c_2 = .02
 
     #----Variables----
     parts = particles
@@ -291,8 +291,8 @@ class Model:
           for k in range(len(parts[j].mlp_init)):
             for l in range(len(parts[j].mlp_init[k])):
               for m in range(len(parts[j].mlp_init[k][l])):
-                r_1 = random.uniform(0,10)
-                r_2 = random.uniform(0,10)
+                r_1 = random.uniform(0,1)
+                r_2 = random.uniform(0,1)
                 v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
@@ -388,8 +388,8 @@ class Model:
           for k in range(len(parts[j].mlp_init)):
             for l in range(len(parts[j].mlp_init[k])):
               for m in range(len(parts[j].mlp_init[k][l])):
-                r_1 = random.uniform(0,1)
-                r_2 = random.uniform(0,1)
+                r_1 = random.uniform(0,10)
+                r_2 = random.uniform(0,10)
                 v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
