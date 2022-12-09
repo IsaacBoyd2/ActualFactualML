@@ -297,13 +297,13 @@ class Model:
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
 
-    greatest = []
-    for i in range(pb):
-      if greatest[0] < pb[i][0]:
-        greatest[0] = pb[i][0]
-        greatest[1] = i
+      greatest = []
+      for i in range(pb):
+        if greatest[0] < pb[i][0]:
+          greatest[0] = pb[i][0]
+          greatest[1] = i
 
-    return parts[greatest[1]]
+      return parts[greatest[1]]
 
             
 
@@ -399,13 +399,13 @@ class Model:
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
                  
-    greatest = []
-    for i in range(pb):
-      if greatest[0] > pb[i][0]:
-        greatest[0] = pb[i][0]
-        greatest[1] = i
+      greatest = []
+      for i in range(pb):
+        if greatest[0] > pb[i][0]:
+          greatest[0] = pb[i][0]
+          greatest[1] = i
 
-    return parts[greatest[1]]
+      return parts[greatest[1]]
 
 #---------Testing-Area------------
 # import requests
