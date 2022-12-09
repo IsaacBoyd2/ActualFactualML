@@ -199,9 +199,9 @@ class Model:
         totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
       totalEdges += len(uniques) * len(parts[0].mlp_init[-1])
 
-    #make a velocity array that will hold 0 velocities for all weights
-    v = np.zeros((len(parts), totalEdges))
-    gb = [0, np.zeros(totalEdges)]
+      #make a velocity array that will hold 0 velocities for all weights
+      v = np.zeros((len(parts), totalEdges))
+      gb = [0, np.zeros(totalEdges)]
 
       for i in range(loops):
         print("\n\nLOOP ", i)
@@ -314,7 +314,11 @@ class Model:
       totalEdges = 0
       for i in range(len(parts[0].mlp_init)-1):
         totalEdges += len(parts[0].mlp_init[i]) * len(parts[0].mlp_init[i+1])
-      totalEdges += len(parts[0].mlp_init[-1])
+        totalEdges += len(parts[0].mlp_init[-1])
+
+        #make a velocity array that will hold 0 velocities for all weights
+        v = np.zeros((len(parts), totalEdges))
+        gb = [0, np.zeros(totalEdges)]
 
       for i in range(loops):
         for j in range(len(parts)):
