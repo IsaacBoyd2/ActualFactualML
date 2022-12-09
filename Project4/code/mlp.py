@@ -280,7 +280,7 @@ class Model:
               gb = [lossValues.F1,temp]
               print("GLOBAL BEST: ", i, gb[0])
 
-            print(j, lossValues.F1)
+            # print(j, lossValues.F1)
           
             
 
@@ -296,6 +296,14 @@ class Model:
                 v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
+
+    greatest = []
+    for i in range(pb):
+      if greatest[0] < pb[i][0]:
+        greatest[0] = pb[i][0]
+        greatest[1] = i
+
+    return parts[greatest[1]]
 
             
 
@@ -377,11 +385,8 @@ class Model:
             #check for global best mse score
             if gb[0] > lossValues.mse:
               gb = [lossValues.mse,temp]
-              print(i, gb[0])
+              print("GLOBAL BEST: ", i, gb[0])
           
-            
-
-
         for j in range(len(parts)):
           counter = 0
           #update velocity and position
@@ -393,6 +398,14 @@ class Model:
                 v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
+                 
+    greatest = []
+    for i in range(pb):
+      if greatest[0] > pb[i][0]:
+        greatest[0] = pb[i][0]
+        greatest[1] = i
+
+    return parts[greatest[1]]
 
 #---------Testing-Area------------
 # import requests
