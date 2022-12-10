@@ -186,7 +186,7 @@ class Model:
     parts = particles
     r_1 = 0
     r_2 = 0
-    loops = 400
+    loops = 10
     pb = []
     
     #classification
@@ -281,11 +281,7 @@ class Model:
               gb = [lossValues.F1,temp]
               print("GLOBAL BEST: ", i, gb[0])
 
-            # print(j, lossValues.F1)
           
-            
-
-
         for j in range(len(parts)):
           counter = 0
           #update velocity and position
@@ -299,6 +295,7 @@ class Model:
                 counter += 1
 
       greatest = [0,0]
+      print("PB: ", pb[0][0])
       for i in range(pb):
         if greatest[0] < pb[i][0]:
           greatest[0] = pb[i][0]
@@ -329,6 +326,7 @@ class Model:
           #the first particle
           if i == 0 and j == 0:
             for k in range(len(training_df)):
+              print("\n\nVALUES:",  parts[j].values)
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
               actual.append(training_df.values[k,-1])
               values.append(parts[j].values[k,-1])
