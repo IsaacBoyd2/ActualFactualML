@@ -325,9 +325,9 @@ class Model:
           #the first particle
           if i == 0 and j == 0:
             for k in range(len(training_df)):
-              print("\n\nVALUES:",  parts[j].values)
-              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
+              parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), 1)
               actual.append(training_df.values[k,-1])
+              print("\n\nVALUES:",  parts[j].values[k])
               values.append(parts[j].values[k,-1])
 
             lossValues = lss.Loss()
