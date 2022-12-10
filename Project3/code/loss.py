@@ -93,6 +93,8 @@ class Loss:
     total = 0
     #goes through all of our predictions and compares them to the actual result
     for i in range(len(pred)):
+      print("FACTS: ",facts)
+      print("\n\nPRED: ",pred)
       distance = distance + ((float(facts[i]) - float(pred[i]))**float(2))
       distanceabs = distanceabs + abs((float(facts[i]) - float(pred[i])))
       #saves all of the errors for each point
