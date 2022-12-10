@@ -318,7 +318,7 @@ class Model:
       gb = [0, np.zeros(totalEdges)]
 
       for i in range(loops):
-        print("LOOP ", i)
+        print("\n\nLOOP ", i)
         for j in range(len(parts)):
           #used to hold the correct and the guessed classes
           values = []
