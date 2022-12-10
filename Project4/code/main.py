@@ -4,7 +4,7 @@ from posixpath import join
 
 #Code by: Isaac Boyd, James Lucas 
 
-##Code For: Neural Net
+##Code For: Neural Net 
 ##Completed: 11-1-2022
 ##References: NA
 
@@ -20,7 +20,7 @@ import math
 
 classInputArray = [['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/preprocessing.py?raw=true','preprocessing.py'],
                    ['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/loss.py?raw=true', 'loss.py'],
-                   ['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project3/code/mlp.py?raw=true', 'mlp.py']]
+                   ['https://github.com/IsaacBoyd2/ActualFactualML/blob/main/Project4/code/mlp.py?raw=true', 'mlp.py']]
 
 #writes our code from github to our current local file
 for i in range(len(classInputArray)):
@@ -39,17 +39,15 @@ def main():
 
   #-----Hyper_parameters-------#
 
-  hiddenArray = [200]
-  
-  eta = 0.0015
+  hiddenArray = [10]
 
-  superscore = 0
+  particleNumber = 30
+
+  #------run-properties--------#
+
+  algType = 3
 
   #----------------------------#
-
-  flag = 0
-  if len(hiddenArray) == 0:
-    flag = 1
 
   #runs preProcessing
   preProcess = pp.Preprocessing()
@@ -60,7 +58,6 @@ def main():
 
   #classification
   if preProcess.value == 0:
-
 
     #Define what type of cross fold validation we will be doing
     type_of_cross_v = 10
@@ -77,11 +74,8 @@ def main():
     for run_num in range(1):   #Just for 1
       
 
-      #First run our model to initilize the weights
+      #Makes the testing and training sets
       preProcess.oneHot()
-      modeling = MLP.Model()
-      
-      modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,len(preProcess.classes),flag)
 
       testing_list = []
       training_list = []
@@ -104,39 +98,44 @@ def main():
       testing_df_with_labels = preProcess.df.iloc[testing_list]
       testing_df = testing_df_with_labels.iloc[: , :-1]
       
+      #------------GA------------
+      if algType == 1:
+        pass
       
+      #------------GE------------
+      elif algType == 2:
+        pass
       
-      for q in range(10):
+      #----------PSO------------
+      elif algType == 3:
         
-        for i in range(len(training_df)):   
-          modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
-          modeling.Back_Prop(eta,0,[preProcess.oneHotDict,training_df.values[i,-1]],len(preProcess.classes))
-          
-        values = []
-        actual = []
+        #used to hold the particles
+        models = []
 
-      uniques = training_df['Class'].unique()
+        #makes the defined number of particles
+        for i in range(particleNumber):
+          model = MLP.Model()
+          model.run(len(preProcess.df.iloc[0]-1), hiddenArray, len(preProcess.classes))
+          models.append(model) 
+
+        topModel = MLP.Model()
+        modeling = topModel.algPSO(models, 0, training_df, testing_df, testing_df_with_labels)
       
+      actual = []
+      values = []
+      uniques = training_df['Class'].unique()
+      #Used to test the model with the testing data.
       for i in range(len(testing_df)):
         modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
         actual.append(testing_df_with_labels.values[i,-1])
         values.append(uniques[modeling.values[-1].index(max(modeling.values[-1]))])
 
-        if testing_df_with_labels.values[i,-1] == uniques[modeling.values[-1].index(max(modeling.values[-1]))]:
-          superscore += 1
-
     lossValues = lss.Loss()
     lossValues.calculate(uniques, values, actual)
-    print("F1-score: ", lossValues.F1)
+    print("\n\nF1-score after testing: ", lossValues.F1)
 
   #regression
   else:
-
-
-    #First run our model to initilize the weights
-    modeling = MLP.Model()
-    modeling.run(len(preProcess.df.iloc[0])-1,hiddenArray,1,flag)
-
 
     #Define what type of cross fold validation we will be doing
     type_of_cross_v = 10
@@ -149,50 +148,67 @@ def main():
     random_list = random.sample(range(len(preProcess.df)), len(preProcess.df)) 
     testing_size = len(preProcess.df) - training_size
 
+    totalvalues = []
+    totalactual = []
 
-    testing_list = []
-    training_list = []
-    #This is hardcoded but will need to be changed to fit crossv
-    testing_list = random_list[0*testing_size:testing_size*(0+1)]
+    for run_num in range(1):   #Just for 1
+      #Makes the testing and training sets
+      testing_list = []
+      training_list = []
 
-    random_list2 = []
+      testing_list = random_list[run_num*testing_size:testing_size*(run_num+1)]
 
-    for k in random_list:
-      random_list2.append(k)
+      random_list2 = []
 
-    for j in testing_list:
-      random_list2.remove(j)
+      for k in random_list:
+        random_list2.append(k)
 
-    for l in random_list2:
-      training_list.append(l)
+      for j in testing_list:
+        random_list2.remove(j)
 
-    #here are dataframes that we can acually use 
-    training_df =  preProcess.df.iloc[training_list]
-    testing_df_with_labels = preProcess.df.iloc[testing_list]
-    testing_df = testing_df_with_labels.iloc[: , :-1]
+      for l in random_list2:
+        training_list.append(l)
 
-    
-    for q in range(10):
+      #here are dataframes that we can acually use 
+      training_df =  preProcess.df.iloc[training_list]
+      testing_df_with_labels = preProcess.df.iloc[testing_list]
+      testing_df = testing_df_with_labels.iloc[: , :-1]
       
-      for i in range(len(training_df)):   
+      #------------GA------------
+      if algType == 1:
+        pass
+      
+      #------------GE------------
+      elif algType == 2:
+        pass
+      
+      #----------PSO------------
+      elif algType == 3:
+        foldCounter = 0
+        while foldCounter < 10:
+          #used to hold the particles
+          models = []
 
-        modeling.forwardProp(training_df.values[i,0:-1].astype('float'),preProcess.value)
+          #makes the defined number of particles
+          for i in range(particleNumber):
+            model = MLP.Model()
+            model.run(len(preProcess.df.iloc[0]-1), hiddenArray, 1)
+            models.append(model) 
 
-        modeling.Back_Prop(eta,1,training_df.values[i,-1],1)
+          topModel = MLP.Model()
+          modeling = topModel.algPSO(models, 1, training_df, testing_df, testing_df_with_labels)
+        
+          #Used to test the model with the testing data.
+          for i in range(len(testing_df)):
+            modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
+            totalactual.append(testing_df_with_labels.values[i,-1])
+            totalvalues.append(modeling.output)
 
-    values = []
-    actual = []
-    for i in range(len(testing_df)):
-      actual.append(testing_df_with_labels.values[i,-1])
-
-
-    for i in range(len(testing_df)):
-      modeling.forwardProp(testing_df.values[i].astype('float'),preProcess.value)
-      values.append(modeling.output)
+          foldCounter += 1
 
     lossValues = lss.Loss()
-    lossValues.calculateReg(values, actual)
-    print("MSE: ", lossValues.mse, "\nMAE: ", lossValues.mae)
+    lossValues.calculateReg(totalvalues, totalactual)
+    print("\n\nMSE after testing: ", lossValues.mse)
     
 
 #calls main
