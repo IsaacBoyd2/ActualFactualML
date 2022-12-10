@@ -91,19 +91,20 @@ class Loss:
     distance = float(0)
     distanceabs = float(0)
     total = 0
-    #goes through all of our predictions and compares them to the actual result
-    for i in range(len(pred)):
-      print("FACTS: ",facts)
-      print("\n\nPRED: ",pred)
-      distance = distance + ((float(facts[i]) - float(pred[i]))**float(2))
-      distanceabs = distanceabs + abs((float(facts[i]) - float(pred[i])))
-      #saves all of the errors for each point
-      self.error.append((float(facts[i]) - float(pred[i]))**float(2))
-      total = total+1
+    if len(pred[i]) == 1:
+      #goes through all of our predictions and compares them to the actual result
+      for i in range(len(pred)):
+        distance = distance + ((float(facts[i]) - float(pred[i]))**float(2))
+        distanceabs = distanceabs + abs((float(facts[i]) - float(pred[i])))
+        #saves all of the errors for each point
+        self.error.append((float(facts[i]) - float(pred[i]))**float(2))
+        total = total+1
 
-    #makes sure that our predictions and actual results are not empty
-    if len(facts) > 0:
-      self.mse = distance/total
-      self.mae = distanceabs/total
+      #makes sure that our predictions and actual results are not empty
+      if len(facts) > 0:
+        self.mse = distance/total
+        self.mae = distanceabs/total
+      else:
+        self.mse = 0
     else:
-      self.mse = 0
+      self.mse = 1000
