@@ -32,6 +32,7 @@ class Model:
     self.labels = []
     self.mlp_init = []
     self.values = []
+    self.output = int()
     
   def run(self, input_size, hidden_sizes, output_size):  
     #Initilize the network to have random weights between 0 and 1.
@@ -327,8 +328,8 @@ class Model:
             for k in range(len(training_df)):
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), 1)
               actual.append(training_df.values[k,-1])
-              print("\n\nVALUES:",  parts[j].values[-1])
-              values.append(parts[j].values[-1])
+              print("\n\nVALUES: ",  parts[j].output)
+              values.append(parts[j].output)
 
             lossValues = lss.Loss()
             print("VALUES AND ACTUAL: ", values, "\n\n", actual)
