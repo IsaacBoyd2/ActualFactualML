@@ -328,7 +328,6 @@ class Model:
             for k in range(len(training_df)):
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), 1)
               actual.append(training_df.values[k,-1])
-              print("\n\nVALUES: ",  parts[j].output)
               values.append(parts[j].output)
 
             lossValues = lss.Loss()
@@ -351,7 +350,7 @@ class Model:
             for k in range(len(training_df)):
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
               actual.append(training_df.values[k,-1])
-              values.append(parts[j].values[-1])
+              values.append(parts[j].output)
 
             lossValues = lss.Loss()
             lossValues.calculateReg(values, actual)
@@ -374,7 +373,7 @@ class Model:
             for k in range(len(training_df)):
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), dataType)
               actual.append(training_df.values[k,-1])
-              values.append(parts[j].values[-1])
+              values.append(parts[j].output)
 
             #calculates loss on that model
             lossValues = lss.Loss()
