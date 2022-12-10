@@ -327,11 +327,11 @@ class Model:
             for k in range(len(training_df)):
               parts[j].forwardProp(training_df.iloc[k,0:-1].values.astype('float'), 1)
               actual.append(training_df.values[k,-1])
-              print("\n\nVALUES:",  parts[j].values[k])
-              values.append(parts[j].values[k,-1])
+              print("\n\nVALUES:",  parts[j].values[-1])
+              values.append(parts[j].values[-1])
 
             lossValues = lss.Loss()
-            print("VALUES AND ACTUAL: ", values, "\n\n\n", actual)
+            print("VALUES AND ACTUAL: ", values, "\n\n", actual)
             lossValues.calculateReg(values, actual)
             
             #used to hold all values of the weights themselves
