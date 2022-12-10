@@ -295,8 +295,7 @@ class Model:
                 counter += 1
 
       greatest = [0,2]
-      print("PB: ", greatest[0])
-      for i in range(pb):
+      for i in range(len(pb)):
         if greatest[0] < pb[i][0]:
           greatest[0] = pb[i][0]
           greatest[1] = i
@@ -409,7 +408,7 @@ class Model:
                 counter += 1
                  
       greatest = [1000000000000,0]
-      for i in range(pb):
+      for i in range(len(pb)):
         if greatest[0] > pb[i][0]:
           greatest[0] = pb[i][0]
           greatest[1] = i
