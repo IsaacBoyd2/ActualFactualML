@@ -294,8 +294,8 @@ class Model:
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
                 counter += 1
 
-      greatest = [0,0]
-      print("PB: ", pb[0][0])
+      greatest = [0,2]
+      print("PB: ", greatest[0])
       for i in range(pb):
         if greatest[0] < pb[i][0]:
           greatest[0] = pb[i][0]
