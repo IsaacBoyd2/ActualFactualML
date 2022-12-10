@@ -318,6 +318,7 @@ class Model:
       gb = [0, np.zeros(totalEdges)]
 
       for i in range(loops):
+        print("LOOP ", i)
         for j in range(len(parts)):
           #used to hold the correct and the guessed classes
           values = []
@@ -331,7 +332,6 @@ class Model:
               values.append(parts[j].output)
 
             lossValues = lss.Loss()
-            print("VALUES AND ACTUAL: ", values, "\n\n", actual)
             lossValues.calculateReg(values, actual)
             
             #used to hold all values of the weights themselves
