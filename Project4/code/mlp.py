@@ -276,7 +276,7 @@ class Model:
                     temp.append(parts[j].mlp_init[k][l][m])
 
               pb[j] = [lossValues.F1, temp]
-              #print("PERSONAL BEST: ", i, pb[j][0])
+              print("PERSONAL BEST: ", i, pb[j][0])
 
             #check for global best F1 score
             if gb[0] < lossValues.F1:
@@ -292,12 +292,12 @@ class Model:
               for m in range(len(parts[j].mlp_init[k][l])):
                 r_1 = random.uniform(0,1)
                 r_2 = random.uniform(0,1)
-                #print("\n\nCurrent Velocity: ", v[j][counter])
+                print("\n\nCurrent Velocity: ", v[j][counter])
                 v[j][counter] = (.0001*v[j][counter]) + c_1*r_1*(pb[j][1][counter] - parts[j].mlp_init[k][l][m]) + c_2*r_2*(gb[1][counter] - parts[j].mlp_init[k][l][m])
-                #print("New Velocity: ", v[j][counter])
-                #print("\nCurrent Posititon: ", parts[j].mlp_init[k][l][m])
+                print("New Velocity: ", v[j][counter])
+                print("\nCurrent Posititon: ", parts[j].mlp_init[k][l][m])
                 parts[j].mlp_init[k][l][m] = parts[j].mlp_init[k][l][m] + v[j][counter]
-                #print("New Position: ", parts[j].mlp_init[k][l][m])
+                print("New Position: ", parts[j].mlp_init[k][l][m])
                 counter += 1
 
       greatest = [0,2]
